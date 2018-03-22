@@ -22,13 +22,13 @@
         </intent-filter>
       </activity>
         <intent-filter>
-              <action Android:name="Android.intent.action.VIEW" />
-              <category Android:name="Android.intent.category.DEFAULT" />
-              <category Android:name="Android.intent.category.BROWSABLE" />
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
               <data
-                  Android:host="redion32.auth0.com"
-                  Android:pathPrefix="/Android/${applicationId}/callback"
-                  Android:scheme="${applicationId}" />
+                  android:host="redion32.auth0.com"
+                  android:pathPrefix="/android/${applicationId}/callback"
+                  android:scheme="${applicationId}" />
           </intent-filter>     
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
