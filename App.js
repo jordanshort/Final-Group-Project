@@ -8,7 +8,7 @@ export default class App extends React.Component {
     // Alert.alert('You tapped the button!');
     auth0
       .webAuth
-      .authorize({scope: 'openid profile email', audience: `https://${AUTH0_DOMAIN}/userinfo`, useBrowser: true})
+      .authorize({scope: 'openid profile email', audience: `https://${AUTH0_DOMAIN}/userinfo`, useBrowser: true, responseType:'id_token'})
       .then(credentials => {
         console.log(credentials)
         // const RegisterUser = gql`
