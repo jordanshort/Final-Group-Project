@@ -1,18 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
-
+import AppAuth from 'react-native-app-auth'
 import { auth0, AUTH0_DOMAIN } from './server/src/auth0';
 export default class App extends React.Component {
   loginWindow() {
     // Alert.alert('You tapped the button!');
     auth0
       .webAuth
-      .authorize({scope: 'openid profile email', audience: `https://redion32.auth0.com/userinfo`, useBrowser: true})
+      .authorize({scope: 'openid profile email', audience: `${AUTH0_DOMAIN}`, useBrowser: true})
       .then(credentials => {
         console.log(credentials)
-        Alert.alert('You tapped the button!');
-        // Successfully authenticated
-        // Store the accessToken
+        // const RegisterUser = gql`
+        // mutation`
       })
       .catch(error => console.log(error));
 
