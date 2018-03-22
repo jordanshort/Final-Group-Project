@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import AppAuth from 'react-native-app-auth'
-import { auth0, AUTH0_DOMAIN } from './server/src/auth0';
+
+import { auth0, AUTH0_DOMAIN } from './server/src/auth0'
 export default class App extends React.Component {
   loginWindow() {
     // Alert.alert('You tapped the button!');
     auth0
       .webAuth
-      .authorize({scope: 'openid profile email', audience: `${AUTH0_DOMAIN}`, useBrowser: true})
+      .authorize({scope: 'openid profile email', audience: `https://${AUTH0_DOMAIN}/userinfo`, useBrowser: true})
       .then(credentials => {
         console.log(credentials)
         // const RegisterUser = gql`
