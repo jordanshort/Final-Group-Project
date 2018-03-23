@@ -6,6 +6,12 @@ import axios from 'axios';
 import { auth0, AUTH0_DOMAIN } from './src/auth0'
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+    }
+  }
+
   loginWindow() {
     auth0
       .webAuth
@@ -13,7 +19,7 @@ export default class App extends React.Component {
       .then(credentials => {
         // console.log(verifyToken)
         verifyToken(credentials);
-        console.log(credentials)
+        console.log(credentials);
         axios.post(`/api/index/${credentials}`).then(res=>{
           console.log(res)
           res.status(200).send(res)
@@ -22,6 +28,10 @@ export default class App extends React.Component {
       })
       .catch(error => console.log(error));
 
+  }
+
+ 
+    
   }
   render() {
     return (
@@ -32,7 +42,6 @@ export default class App extends React.Component {
           title="login"
           onPress={() => this.loginWindow()}
         />
-      
       </View>
     );
   }
