@@ -1,6 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
+import { Container } from 'native-base'
 import axios from 'axios';
+
+import TaskDetails from './TaskDetails';
+import CalendarScreen from './CalendarScreen'
+
 
 import { auth0, AUTH0_DOMAIN } from './src/auth0'
 
@@ -22,15 +27,18 @@ export default class App extends React.Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Welcome To Coolendesk!</Text>
-       
-        <Button
+      <Container>
+        {/* <Text>Welcome To Coolendesk!</Text> */}
+
+        <TaskDetails />
+        <CalendarScreen />
+       <Text>Hello</Text>
+        {/* <Button
           title="login"
           onPress={() => this.loginWindow()}
-        />
+        /> */}
       
-      </View>
+      </Container>
     );
   }
 }
