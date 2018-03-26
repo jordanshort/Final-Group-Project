@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Alert, Button, Text } from 'react-native';
-import { Container } from 'native-base';
-import AppAuth from 'react-native-app-auth'
+import { Container, Drawer, Right, Content } from 'native-base';
 import axios from 'axios';
 import FooterMenu from './component/footer/FooterMenu';
 import Unscheduled from './component/unscheduled/Unscheduled';
@@ -13,18 +12,17 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      user: {id: 1, name: "Jordan"}
+      user: {id: 1, name: "Jordan"},
+      showModal: false
     }
     this.showMenuItem = this.showMenuItem.bind(this);
   }
 
   showMenuItem(name){
-    if (this.state[name] === false){
-      this.setState({[name]: true});
-    } else {
-      this.setState({[name]: false});
-    };
+    this.setState({showModal: !this.state.showModal});
   }
+
+  
 
   loginWindow() {
     auth0
@@ -51,7 +49,10 @@ export default class App extends React.Component {
     if (this.state.user){
       return(
         <Container>
-          <FooterMenu showMenuItem={this.showMenuItem} />
+          <Content>
+            <Unscheduled visible={this.state.showModal} showMenuItem={this.showMenuItem}/>
+          </Content>
+          <FooterMenu showMenuItem={this.showMenuItem} />         
         </Container>
       )
     } else {
