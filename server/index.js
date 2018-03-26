@@ -2,7 +2,8 @@ const express = require('express')
     , massive = require('massive')
     , bodyParser = require('body-parser')
     , jwt = require('jsonwebtoken')
-    , app = express();
+    , app = express()
+    , taskCtrl = require('./taskController');
 app.use(bodyParser.json());
 require('dotenv').config();
 const { CONNECTION_STRING, AUTH0_CLIENT_SECRET, JWT_SECRET, SERVER_PORT } = process.env;
@@ -39,9 +40,9 @@ app.post('/api/auth', (req, res) => {
     })
 })
 
-app.get('/api/test', function(req, res){
-    res.status(200).send({name: "Jordan", last: "Short" })
-})
+//task endpoints
+app.get('/api/unscheduled', taskCtrl.getUnscheduled);
+app.get('/api/inprogress', taskCtrl.getInProgress);
 
 
 app.listen(SERVER_PORT, () => {
