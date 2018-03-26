@@ -1,0 +1,1 @@
+select * from task where userid = $1 and starttime is not null and completed = false;
