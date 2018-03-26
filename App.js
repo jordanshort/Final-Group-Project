@@ -4,7 +4,8 @@ import { Container } from 'native-base'
 import axios from 'axios';
 
 import TaskDetails from './TaskDetails';
-import CalendarScreen from './CalendarScreen'
+import Actions from './Actions'
+// import CalendarScreen from './CalendarScreen'
 
 
 import { auth0, AUTH0_DOMAIN } from './src/auth0'
@@ -31,8 +32,10 @@ export default class App extends React.Component {
         {/* <Text>Welcome To Coolendesk!</Text> */}
 
         <TaskDetails />
-        <CalendarScreen />
-       <Text>Hello</Text>
+        
+        {/* <Actions /> */}
+        {/* <CalendarScreen /> */}
+       {/* <Text>Hello</Text> */}
         {/* <Button
           title="login"
           onPress={() => this.loginWindow()}
