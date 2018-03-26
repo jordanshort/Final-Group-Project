@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Alert, Button, Text } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import { Container } from 'native-base';
-import AppAuth from 'react-native-app-auth'
 import axios from 'axios';
-import FooterMenu from './component/footer/FooterMenu';
-import Unscheduled from './component/unscheduled/Unscheduled';
+import FooterMenu from './components/Footer/FooterMenu';
+import Unscheduled from './components/Unscheduled/Unscheduled';
+import TaskDetails from './components/TaskDetails/TaskDetails'
 
 
-import { auth0, AUTH0_DOMAIN } from './src/auth0'
+import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
 
 export default class App extends React.Component {
   constructor(props){
@@ -40,7 +40,7 @@ export default class App extends React.Component {
         })
         
       })
-      .catch(error => console.log(error));
+      // .catch(error => console.log(error));
 
   }
 
@@ -51,6 +51,7 @@ export default class App extends React.Component {
     if (this.state.user){
       return(
         <Container>
+          <TaskDetails />
           <FooterMenu showMenuItem={this.showMenuItem} />
         </Container>
       )

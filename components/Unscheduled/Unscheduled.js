@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListView, StyleSheet } from 'react-native';
 import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, Right, Body, Title, Footer, FooterTab } from 'native-base';
-import FooterMenu from '../footer/FooterMenu';
+import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
 
