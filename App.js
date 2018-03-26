@@ -1,18 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
-import { Container } from 'native-base'
+import { Container } from 'native-base';
 import axios from 'axios';
-import FooterMenu from './component/footer/FooterMenu';
-import Unscheduled from './component/unscheduled/Unscheduled';
+import FooterMenu from './components/Footer/FooterMenu';
+import Unscheduled from './components/Unscheduled/Unscheduled';
+import TaskDetails from './components/TaskDetails/TaskDetails'
 
 
-import TaskDetails from './TaskDetails';
-import Actions from './Actions'
-import AgendaScreen from './AgendaScreen'
-// import CalendarScreen from './CalendarScreen'
-
-
-import { auth0, AUTH0_DOMAIN } from './src/auth0'
+import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
 
 export default class App extends React.Component {
   constructor(props){
@@ -56,6 +51,7 @@ export default class App extends React.Component {
     if (this.state.user){
       return(
         <Container>
+          <TaskDetails />
           <FooterMenu showMenuItem={this.showMenuItem} />
         </Container>
       )
