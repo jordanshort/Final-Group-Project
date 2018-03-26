@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import TaskDetails from './TaskDetails';
 import Actions from './Actions'
+import AgendaScreen from './AgendaScreen'
 // import CalendarScreen from './CalendarScreen'
 
 
@@ -31,7 +32,8 @@ export default class App extends React.Component {
       <Container>
         {/* <Text>Welcome To Coolendesk!</Text> */}
 
-        <TaskDetails />
+        {/* <TaskDetails /> */}
+        <AgendaScreen />
         
         {/* <Actions /> */}
         {/* <CalendarScreen /> */}

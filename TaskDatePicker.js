@@ -4,7 +4,7 @@ import DatePicker from 'react-native-datepicker'
 export default class TaskDatePicker extends Component {
   constructor(props){
     super(props)
-    this.state = {date:"2018-03-26"}
+    this.state = {}
   }
   render(){
     return (
@@ -18,15 +18,10 @@ export default class TaskDatePicker extends Component {
         maxDate="2021-06-01"
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
-        showIcon='false'
+        confirmBtnText="Confirm"
         borderColor='transparent'
         customStyles={{
-          background: {
-            borderColor:'tranparent'
-          },
-          
-          // ... You can check the source to find the other keys.
-        }}
+          dateInput:{borderWidth: 0}}}
         onDateChange={(date) => {this.setState({date: date})}}
       />
     )

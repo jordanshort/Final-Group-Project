@@ -64,7 +64,18 @@ export default class HeaderIconTextExample extends Component {
              return <Item style={{ paddingTop: 10 }} key={i}><Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />{item.id}</Item>  
         })
         console.log(newChecklistItem)
-       
+        // let checklists = this.state.checklistItems.map((item, i) => {
+        //     return <Text key={i} style={listItems}>{item}</Text>
+        // })
+        // let newChecklist = this.state.checklist.map((item, i)=>{
+        //     return (
+        //          <Item regular style={separate} key={i}>
+        //                 <IconI active name='md-checkbox-outline' size={15} style={padding} />
+        //                 <Input placeholder='Checklist...' style={padding} style={inputSize} name='checklist' value={this.state.label} onPress={(e)=>this.createNewChecklist(e)}></Input>
+        //         </Item>
+        //     )
+        // })
+        // let newChecklistItem = this.state.
         return (
             <Container>
                 <View style={header}>
@@ -93,7 +104,8 @@ export default class HeaderIconTextExample extends Component {
                     </Item>
                     <Item style={margin}>
                         <IconF active name='clock' size={15} />
-                        <Input placeholder='Due date...' style={padding} style={inputSize}  /><TaskDatePicker style={{borderColor:'transparent'}}/>
+                        <Input placeholder='Due date...'   />
+                        <TaskDatePicker style={padding} style={inputSize}/>
                     </Item>
                     <Item style={margin}>
                         <IconSLI active name='tag' size={15} />
@@ -120,6 +132,15 @@ export default class HeaderIconTextExample extends Component {
                                     </Item>
                                     {console.log(newChecklistItem)}
                                     {newChecklistItem}
+                                    {/* {
+                                    item.id>=0
+                                       ?
+                                    <Item style={{paddingTop:10}}>
+                                        <Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />
+                                    </Item>
+                                    :
+                                    null
+                                    } */}
                                 </Content>
                             }
                         })}
