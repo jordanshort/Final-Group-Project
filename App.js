@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert, StatusBar, Image } from 'react-native';
-import { Container } from 'native-base';
+import { Container, Content } from 'native-base';
 import axios from 'axios';
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
