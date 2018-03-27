@@ -3,6 +3,7 @@ const express = require('express')
     , bodyParser = require('body-parser')
     , jwt = require('jsonwebtoken')
     , app = express()
+    , tdCtrl = require('./taskDetailsController')
     , taskCtrl = require('./taskController');
 app.use(bodyParser.json());
 require('dotenv').config();
@@ -42,7 +43,15 @@ app.post('/api/auth', (req, res) => {
 
 //task endpoints
 app.get('/api/unscheduled', taskCtrl.getUnscheduled);
+app.delete('/api/unscheduled/:id', taskCtrl.deleteUnscheduled)
 app.get('/api/inprogress', taskCtrl.getInProgress);
+app.delete('/api/inprogress/:id', taskCtrl.deleteOngoing);
+
+//task details endpoints
+app.post('/api/checklist/:taskid', tdCtrl.addCheckItem);
+app.post('/api/comment/:taskid', tdCtrl.addComment);
+app.put('/api/task/:taskid', tdCtrl.editTask);
+app.post('/api/task', tdCtrl.addTask);
 
 
 app.listen(SERVER_PORT, () => {
