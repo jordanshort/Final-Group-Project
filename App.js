@@ -11,6 +11,8 @@ import DayView from './components/DayView/DayView.js';
 
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
 
+global.theme = 'brown';
+
 export default class App extends React.Component {
   constructor(props){
     super(props);

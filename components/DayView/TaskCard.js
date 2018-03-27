@@ -2,7 +2,10 @@ import React from 'react';
 import { StyleSheet } from 'react-native'
 import { Text, Container } from 'native-base';
 
+import gStyle from './../gStyle.js';
 
+let theme = 'blue';
+let testTheme = global.theme
 
 class TaskCard extends React.Component {
 
@@ -30,6 +33,9 @@ let styles = StyleSheet.create({
     paddingLeft: PADDING,
     marginTop: MARGIN,
     marginBottom: MARGIN,
+    borderStyle: 'solid',
+    borderWidth: 2,
+    borderColor: gStyle[theme].dark,
   },
   textBox: {
     color: 'black',

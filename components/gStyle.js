@@ -1,4 +1,5 @@
 export default {
+
   default: {
     background: '#FFFFFF',
     light: '#EEEEEE',
@@ -6,6 +7,7 @@ export default {
     fontDark: '#111111',
     fontLight: '#EEEEEE',
   },
+
   brown: {
     background: '#F4DBD8',
     light: '#C09891',
@@ -13,6 +15,7 @@ export default {
     fontDark: '#2A0800',
     fontLight: '#C09891',
   },
+
   blue: {
     background: '#65AFFF',
     light: '#5899E2',
@@ -20,11 +23,12 @@ export default {
     fontDark: '#1B2845',
     fontLight: '#65AFFF',
   }
+
 };
 
 /*
 
-let template = {
+template: {
   background: '',
   light: '',
   dark: '',
