@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native'
 import { Container, Header, Left, Body, Right, Button, Title, Text, Input, Item, Content, Form } from 'native-base';
 import TaskDatePicker from './TaskDatePicker.js'
+import Labels from './Labels';
 import IconE from 'react-native-vector-icons/Entypo'
 import IconI from 'react-native-vector-icons/Ionicons'
 import IconF from 'react-native-vector-icons/Feather'
@@ -59,11 +60,10 @@ export default class HeaderIconTextExample extends Component {
     }
     render() {
         console.log(this.state)
-        const { padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, listItems, createChecklist } = styles
-        let newChecklistItem = this.state.checklistItems.forEach((item,i)=>{
-             return <Item style={{ paddingTop: 10 }} key={i}><Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />{item.id}</Item>  
-        })
-        console.log(newChecklistItem)
+        const { padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, listItems, createChecklist, Label } = styles
+        // let newChecklistItem = this.state.checklistItems.forEach((item,i)=>{
+        //      return <Item style={{ paddingTop: 10 }} key={i}><Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />{item.id}</Item>  
+        // })
         // let checklists = this.state.checklistItems.map((item, i) => {
         //     return <Text key={i} style={listItems}>{item}</Text>
         // })
@@ -94,7 +94,6 @@ export default class HeaderIconTextExample extends Component {
                     <View style={header_bottom}>
                         <Left>
                             <Title style={{ color: '#fff' }}>Task Name</Title>
-                        //add props from the component in order to get the task name they create
                         </Left>
                     </View>
                 </View>
@@ -108,8 +107,9 @@ export default class HeaderIconTextExample extends Component {
                         <TaskDatePicker style={padding} style={inputSize}/>
                     </Item>
                     <Item style={margin}>
-                        <IconSLI active name='tag' size={15} />
-                        <Input placeholder='Label...' style={padding} style={inputSize} />
+                        <IconSLI active name='tag' size={15} />                     
+                        <Text style={padding} style={inputSize} /><Labels style={Label} />
+                        {/* style={{marginRight:10}} */}
                     </Item>
                     <Item style={margin}>
                         <IconI active name='ios-person-outline' size={30} />
@@ -130,8 +130,7 @@ export default class HeaderIconTextExample extends Component {
                                     <Item>
                                         <Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />
                                     </Item>
-                                    {console.log(newChecklistItem)}
-                                    {newChecklistItem}
+                                    {/* {newChecklistItem} */}
                                     {/* {
                                     item.id>=0
                                        ?
@@ -174,6 +173,7 @@ const styles = ({
     },
     inputSize: {
         height: 35,
+
     },
     header: {
         backgroundColor: '#00aeef',
@@ -213,5 +213,13 @@ const styles = ({
         // alignContent:'center',
         paddingTop: 8,
         height: 37
+    },
+    Label:{
+        flex:1,
+        justifyContent:'center',
+        marginRight:20,
+        flexDirection:'row',
+        alignItems:'center',
+        paddingBottom:-20
     }
 });
