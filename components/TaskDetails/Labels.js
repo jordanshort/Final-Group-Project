@@ -16,7 +16,6 @@ export default class ModalExample extends Component {
         blue: false,
         pink: false,
         name: '',
-        selected:false
     };
 
     setModalVisible(visible) {
