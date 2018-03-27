@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import { Container } from 'native-base';
 import axios from 'axios';
 import FooterMenu from './components/Footer/FooterMenu';
-import Unscheduled from './components/Unscheduled/Unscheduled';
-import TaskDetails from './components/TaskDetails/TaskDetails'
+// import Unscheduled from './components/Unscheduled/Unscheduled';
+// import TaskDetails from './components/TaskDetails/TaskDetails';
+
+import DayView from './components/DayView/DayView.js';
 
 
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
@@ -48,25 +50,12 @@ export default class App extends React.Component {
     
   
   render() {
-    if (this.state.user){
-      return(
-        <Container>
-          <TaskDetails />
-          <FooterMenu showMenuItem={this.showMenuItem} />
-        </Container>
-      )
-    } else {
-      return(
-        <View style={styles.container}>
-          <Text>Welcome To Coolendesk!</Text>
-          <Button
-            title="login"
-            onPress={() => this.loginWindow()}
-          />
-        </View>
-        
-      )
-    }
+    return (
+      <Container>
+        <DayView />
+        {/* <FooterMenu /> */}
+      </Container>
+    )
   }
 }
 
