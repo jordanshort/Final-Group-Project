@@ -11,14 +11,14 @@ export default class FooterMenu extends Component{
                             <Icon name="add" />
                         </Button>
                         <Button vertical >
-                            <Icon name="calendar" onPress={() => this.props.openDrawer('footer')} />
+                            <Icon name="calendar" onPress={() => this.props.showMenuItem('showCalendar')} />
                             <Text>Calendar</Text>
                         </Button>
-                        <Button vertical onPress={() => this.props.showMenuItem('showModal')}>
+                        <Button vertical onPress={() => this.props.showMenuItem('showTasks')}>
                             <Icon name="clipboard" />
                             <Text>Tasks</Text>
                         </Button>
-                        <Button vertical onPress={() => this.props.showMenuItem('showModal')} >
+                        <Button vertical onPress={() => this.props.showMenuItem('showOngoing')} >
                             <Icon name="paper" />
                             <Text>WIP</Text>
                         </Button>

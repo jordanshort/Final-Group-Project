@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListView, StyleSheet, Modal } from 'react-native';
 import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, Right, Body, Title, Footer, FooterTab } from 'native-base';
-import FooterMenu from '../footer/FooterMenu';
+import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
 
@@ -17,7 +17,7 @@ const datas = [
     
   ];
 
-export default class Unscheduled extends Component{
+export default class Ongoing extends Component{
     constructor(props) {
         super(props);
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -28,8 +28,13 @@ export default class Unscheduled extends Component{
       }
 
     componentDidMount(){
-        axios.get('http://192.168.1.9:4040/api/unscheduled').then(resp => {
-            console.warn(resp.data);
+        axios.get('http://192.168.3.149:4040/api/inprogress').then(resp => {
+            this.setState({listViewData: resp.data});
+        });
+    }
+
+    deleteTask(id){
+        axios.delete(`http://192.168.3.149:4040/api/inprogress/${id}`).then(resp => {
             this.setState({listViewData: resp.data});
         });
     }
@@ -42,14 +47,14 @@ export default class Unscheduled extends Component{
                     animationType="slide"
                     transparent={false}
                     visible={this.props.visible}
-                    onRequestClose={() => this.props.showMenuItem('showModal')}
+                    onRequestClose={() => this.props.showMenuItem('showOngoing')}
                     >
                     <Header style={styles.header}>
                         <Left style={{width: 300}}>
-                            <Title style={styles.black}>Unscheduled Tasks</Title>                                                
+                            <Title style={styles.black}>Ongoing Tasks</Title>                                                
                         </Left>
                         <Right>
-                            <Button transparent onPress={() => this.props.showMenuItem('showModal')}>
+                            <Button transparent onPress={() => this.props.showMenuItem('showOngoing')}>
                                 <Icon name="close" style={styles.black}/>
                             </Button>
                         </Right>
@@ -58,15 +63,15 @@ export default class Unscheduled extends Component{
                     <List
                         dataSource={this.ds.cloneWithRows(this.state.listViewData)}
                         renderRow={data =>
-                        <ListItem>
+                        <ListItem onPress={() => this.props.onTaskPress(data, 'showOngoing')}>
                             <Text> {data.taskname} </Text> 
                         </ListItem>}
                         renderLeftHiddenRow={data =>
-                        <Button full onPress={() => alert(data)}>
+                        <Button full onPress={() => this.props.onTaskPress(data, 'showOngoing')}>
                             <Icon active name="information-circle" />
                         </Button>}
                         renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-                        <Button full danger onPress={_ => this.deleteRow(secId, rowId, rowMap)}>
+                        <Button full danger onPress={() => this.deleteTask(data.taskid)}>
                             <Icon active name="trash" />
                         </Button>}
                         leftOpenValue={75}
