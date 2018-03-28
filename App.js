@@ -17,7 +17,7 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      user: {id: 1, name: "Jordan"},
+      // user: {id: 1, name: "Jordan"},
       showTasks: false,
       showCalendar: false,
       showTaskDetails: false,
@@ -63,7 +63,7 @@ export default class App extends React.Component {
         // console.warn(credentials);
         console.log(credentials);
         
-        axios.post(`/api/index/${credentials}`).then(res=>{
+        axios.post('http://192.168.3.149:4040/api/auth', credentials).then(res=>{
           console.log(res)
           res.status(200).send(res)
           this.setState({
@@ -74,12 +74,6 @@ export default class App extends React.Component {
       // .catch(error => console.log(error));
   }
 
-  componentDidMount(){
-    SplashScreen.hide();
-  }
- 
-    
-  
   render() {
     if (this.state.user){
       return(
