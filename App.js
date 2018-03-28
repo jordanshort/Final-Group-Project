@@ -17,22 +17,29 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      // user: {id: 1, name: "Jordan"},
+      user: {id: 1, name: "Jordan"},
       showTasks: false,
       showCalendar: false,
       showTaskDetails: false,
       showOngoing: false,
       selectedDay: '',
-      selectedTask: {}
+      selectedTask: {},
+      unscheduledCount: null
     }
     this.showMenuItem = this.showMenuItem.bind(this);
     this.onDayPress = this.onDayPress.bind(this);
     this.onTaskPress = this.onTaskPress.bind(this);
     this.loginWindow = this.loginWindow.bind(this);
+    this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
   }
 
   componentDidMount(){
     SplashScreen.hide();
+  }
+
+  setUnscheduledCount(count){
+    console.log('function unschedCount' + count);
+    this.setState({unscheduledCount: count});
   }
 
   showMenuItem(name){
@@ -75,16 +82,17 @@ export default class App extends React.Component {
   }
 
   render() {
+    console.log('unsched Count: ' + this.state.unscheduledCount);
     if (this.state.user){
       return(
         <Container>
           <Content>
             <TaskDetails selectedTask={this.state.selectedTask}/>
             <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem}/>
-            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress}/>
+            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount}/>
             <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress}/>
           </Content>
-          <FooterMenu showMenuItem={this.showMenuItem} />         
+          <FooterMenu showMenuItem={this.showMenuItem} unschedCount={this.state.unscheduledCount} />         
         </Container>
       )
     }

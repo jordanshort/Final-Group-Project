@@ -30,6 +30,7 @@ export default class Unscheduled extends Component{
     componentDidMount(){
         axios.get('http://192.168.3.149:4040/api/unscheduled').then(resp => {
             this.setState({listViewData: resp.data});
+            this.props.setCount(resp.data.length);            
         });
     }
 

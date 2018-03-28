@@ -4,6 +4,7 @@ const express = require('express')
     , jwt = require('jsonwebtoken')
     , app = express()
     , tdCtrl = require('./taskDetailsController')
+    , userCtrl = require('./userController')
     , taskCtrl = require('./taskController');
 app.use(bodyParser.json());
 require('dotenv').config();
@@ -16,7 +17,7 @@ massive(CONNECTION_STRING).then( db => {
 });
 
 //Auth login endpoints
-app.post('/api/auth', (req, res) => {
+app.post('/api/auth', (req, res, next) => {
     console.log('Auth endpoint hit');
     jwt.verify(req.body.token, AUTH0_CLIENT_SECRET, (err, decoded) => {
         let db = app.get('db');
@@ -54,6 +55,9 @@ app.post('/api/checklist/:taskid', tdCtrl.addCheckItem);
 app.post('/api/comment/:taskid', tdCtrl.addComment);
 app.put('/api/task/:taskid', tdCtrl.editTask);
 app.post('/api/task', tdCtrl.addTask);
+
+//user endpoints
+app.get('/api/user', userCtrl.getUser);
 
 
 app.listen(SERVER_PORT, () => {
