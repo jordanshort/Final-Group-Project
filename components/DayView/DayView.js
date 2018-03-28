@@ -36,95 +36,13 @@ const CARD_NONOVERLAP = 5;
 
 
 
-
-let testData = [
-  {
-    id: 10,
-    title: 'Card one',
-    color: '#EEEEEE',
-    startBlock: 0, 
-    duration: 3,
-  },
-  {
-    id: 11,
-    title: 'Card two',
-    color: '#AAAAAA',
-    startBlock: 1,
-    duration: 1,
-  },
-  {
-    id: 12,
-    title: 'Card three',
-    color: '#AAAAAA',
-    startBlock: 2,
-    duration: 2,
-  },
-  {
-    id: 13,
-    title: 'Card four',
-    color: 'blue',
-    startBlock: 3,
-    duration: 2,
-  },
-  {
-    id: 14,
-    title: 'Card five',
-    color: 'green',
-    startBlock: 4,
-    duration: 5,
-  },
-  {
-    id: 15,
-    title: 'Right 1',
-    color: 'green',
-    startBlock: 11,
-    duration: 2,
-  },
-  {
-    id: 16,
-    title: 'Right 2',
-    color: 'blue',
-    startBlock: 12,
-    duration: 9,
-  },
-  {
-    id: 17,
-    title: 'Right 3',
-    color: 'green',
-    startBlock: 13,
-    duration: 5,
-  },
-  {
-    id: 18,
-    title: 'Right 4',
-    color: 'red',
-    startBlock: 14,
-    duration: 4,
-  },
-  {
-    id: 19,
-    title: 'Right 4',
-    color: 'purple',
-    startBlock: 15,
-    duration: 4,
-  },
-  {
-    id: 20,
-    title: 'Right 5',
-    color: 'green',
-    startBlock: 21,
-    duration: 2,
-  }
-]
-
-
 export default class DayView extends React.Component {
   constructor() {
     super();
     this.state = {
-      pan: new Animated.ValueXY(),
+      // pan: new Animated.ValueXY(),
       day: 0,
-      tasks: testData,
+      tasks: [],
         // {     Task data structure
         //   title: '',
         //   color: '#000000',
@@ -136,7 +54,7 @@ export default class DayView extends React.Component {
 
     // this.state.tasks.forEach((task) => {
     //   let time = this.trimDay(task.startTime)
-    //   task.startBlock = this.toBlock(time);
+    //   task.blockStart = this.toBlock(time);
     // })
   }
 
@@ -154,25 +72,37 @@ export default class DayView extends React.Component {
       // Convert to segment index
       return time / (BLOCK_SIZE*60*1000) // (converts minutes to ms)
   }
+  
+  changeDimensions(id, newStart, newHeight) {
 
+    newStart = newStart || this.state.tasks[id].blockStart*SEGMENT_HEIGHT;
+    newHeight = newHeight || this.state.tasks[id].blockDuration*SEGMENT_HEIGHT;
+
+    newStart = Math.max(0, newStart);
+    newHeith = Math.max(1, newHeight);
+
+    let newCardStats = {...this.state.tasks[id],
+      blockStart: Math.floor((newStart / SEGMENT_HEIGHT)),
+      blockDuration: Math.floor(((newHeight+SEGMENT_HEIGHT-1) / SEGMENT_HEIGHT))}
+
+    console.log('newCardStats:', newCardStats);
+    
+    let newList = [...this.state.tasks];
+    newList[id] = {...newList[id], ...newCardStats}
+    console.log('newList:', newList);
+    
+    this.setState({...this.state, tasks: [...newList]});
+    
+  }
 
   componentDidMount() {
     // Axios call to pull array of tasks for the given day
+    let newList = []
+    inTasks.forEach(task => {
+      newList[task.id] = {...task}
+    })
 
-    // this.coords = { x: 0, y: 0 };
-    // this.state.pan.addListener((value) => this.coords = value);
-
-    // this.panResponder = PanResponder.create({
-    //   onStartShouldSetPanResponder: (e, gesture) => true,
-    //   onPanResponderMove: Animate.event([
-    //     null,
-    //     { dx: this.state.pan.x, dy: this.state.pan.y }
-    //   ]),
-    //   onPanResponderRelease: (e, gesture) => {
-
-    //   }
-    // })
-    // this.state.pan.setValue({ x: 0, y: 0});
+    this.setState({tasks: newList})
   }
 
   renderTimeline() {
@@ -219,59 +149,69 @@ export default class DayView extends React.Component {
     let xSlots = [];
     let rightIndent = [0];
     let taskCount = 0;
-
+    
       // Cycles through the entire day to find cards to fit in each timeslot
     for(let i=0; i<SEGMENTS_TO_RENDER; i++){
         // Cycles through all tasks. Find tasks to insert
       this.state.tasks.forEach((task) =>{
           // Checks to see if a task belongs in the current timeslot
-        if(task.startBlock === i) {
-            // Set the initial style object that determines
-            //   positioning and width
-          let specificStyle = {
-            top: task.startBlock*SEGMENT_HEIGHT,
-            height: task.duration*SEGMENT_HEIGHT,
-            left: BADGE_SPACE,
-            marginRight: RIGHT_MARGIN,
-          }
+          console.log('task:', task);
+        if(task) {
+          if(task.blockStart === i) {
+              // Set the initial style object that determines
+              //   positioning and width
+            let specificStyle = {
+              top: task.blockStart*SEGMENT_HEIGHT,
+              height: task.blockDuration*SEGMENT_HEIGHT,
+              left: BADGE_SPACE,
+              marginRight: RIGHT_MARGIN,
+            }
 
-          let rightAdjusted = false;
-            // Finds the furthest-left open slot to fit the left border to
-          for(let i=0; i<MAX_TASK_WIDTH; i++) {
-            if(!(xSlots[i] > 0 )) {
-              xSlots[i] = task.duration;
-              specificStyle.left = specificStyle.left + CARD_NONOVERLAP*i;
-              i++;
+            let rightAdjusted = false;
+              // Finds the furthest-left open slot to fit the left border to
+            for(let i=0; i<MAX_TASK_WIDTH; i++) {
+              if(!(xSlots[i] > 0 )) {
+                xSlots[i] = task.blockDuration;
+                specificStyle.left = specificStyle.left + CARD_NONOVERLAP*i;
+                i++;
 
-                // Attempts to see if a previous card is being completely
-                //   hidden, and if so brings in right border
-              for(i; i<MAX_TASK_WIDTH; i++) {
-                if(xSlots[i] > 0) {
-                  for(let x=0; x<rightIndent.length+1; x++) {
-                    if(!(rightIndent[x] > 0)) {
-                      rightAdjusted = true;
-                      specificStyle.marginRight = specificStyle.marginRight + CARD_NONOVERLAP*x;
+                  // Attempts to see if a previous card is being completely
+                  //   hidden, and if so brings in right border
+                for(i; i<MAX_TASK_WIDTH; i++) {
+                  if(xSlots[i] > 0) {
+                    for(let x=0; x<rightIndent.length+1; x++) {
+                      if(!(rightIndent[x] > 0)) {
+                        rightAdjusted = true;
+                        specificStyle.marginRight = specificStyle.marginRight + CARD_NONOVERLAP*x;
+                      }
                     }
                   }
                 }
-              }
-                // Keeps track of whether the right border is filled by a
-                //   task card using the default border
-              if(!rightAdjusted && task.duration > rightIndent[0]){
-                rightIndent[0] = task.duration;
+                  // Keeps track of whether the right border is filled by a
+                  //   task card using the default border
+                if(!rightAdjusted && task.blockDuration > rightIndent[0]){
+                  rightIndent[0] = task.blockDuration;
+                }
               }
             }
+            console.log('specificStyle.height:', specificStyle.height);
+            
+              // Pushes the current card with styling onto the timeline
+            cardArr.push(
+              <Container key={task.id} style={[styles.taskCard, specificStyle]}>
+                <TaskCard 
+                  id={task.id}
+                  color={task.color}
+                  title={task.title}
+                  changeDimensions={(x, y, z) => this.changeDimensions(x, y, z)}
+                  itemStart={specificStyle.top}
+                  itemHeight={specificStyle.height} />
+              </Container>
+            )
+
+            // Registers that a task was added to the calendar
+            taskCount++;
           }
-
-            // Pushes the current card with styling onto the timeline
-          cardArr.push(
-            <Container key={task.id} style={[styles.taskCard, specificStyle]}>
-              <TaskCard color={task.color} title={task.title} />
-            </Container>
-          )
-
-          // Registers that a task was added to the calendar
-          taskCount++;
         }
       })
 
@@ -346,3 +286,85 @@ const styles = StyleSheet.create({
     color: gStyle[theme].fontLight,
   }
 });
+
+
+
+let inTasks = [
+  {
+    id: 1,
+    title: 'Card one',
+    color: '#EEEEEE',
+    blockStart: 1, 
+    blockDuration: 3,
+  },
+  {
+    id: 11,
+    title: 'Card two',
+    color: '#AAAAAA',
+    blockStart: 1,
+    blockDuration: 1,
+  },
+  {
+    id: 12,
+    title: 'Card three',
+    color: '#AAAAAA',
+    blockStart: 2,
+    blockDuration: 2,
+  },
+  {
+    id: 13,
+    title: 'Card four',
+    color: 'blue',
+    blockStart: 3,
+    blockDuration: 2,
+  },
+  {
+    id: 14,
+    title: 'Card five',
+    color: 'green',
+    blockStart: 4,
+    blockDuration: 5,
+  },
+  {
+    id: 15,
+    title: 'Right 1',
+    color: 'green',
+    blockStart: 11,
+    blockDuration: 2,
+  },
+  {
+    id: 16,
+    title: 'Right 2',
+    color: 'blue',
+    blockStart: 12,
+    blockDuration: 9,
+  },
+  {
+    id: 17,
+    title: 'Right 3',
+    color: 'green',
+    blockStart: 13,
+    blockDuration: 5,
+  },
+  {
+    id: 18,
+    title: 'Right 4',
+    color: 'red',
+    blockStart: 14,
+    blockDuration: 4,
+  },
+  {
+    id: 19,
+    title: 'Right 4',
+    color: 'purple',
+    blockStart: 15,
+    blockDuration: 4,
+  },
+  {
+    id: 20,
+    title: 'Right 5',
+    color: 'green',
+    blockStart: 21,
+    blockDuration: 2,
+  }
+]
