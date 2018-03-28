@@ -6,23 +6,21 @@ import IconE from 'react-native-vector-icons/Entypo'
 import IconF from 'react-native-vector-icons/Feather'
 
 
-export default class ModalExample extends Component {
+export default class Labels extends Component {
     state = {
         modalVisible: false,
-        red: false,
-        orange: false,
-        green: false,
-        yellow: false,
-        blue: false,
-        pink: false,
-        name: '',
     };
 
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
     }
+    componentWillReceiveProps() {
+        // console.log(this.props.isVisable)
+        this.setState({modalVisible:this.props.isVisable})
+    }
 
     render() {
+        console.log(this.state)
         const { LabelPadding, headerText, colorMargin, buttonStyle } = styles
         return (
             <View style={{ marginTop: 22 }}>
@@ -30,10 +28,8 @@ export default class ModalExample extends Component {
                     animationType="slide"
                     transparent={false}
                     visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        alert('Modal has been closed.');
-                    }}>
-                    <Header style={{ backgroundColor: '#00aeef' }}>
+                    >
+                    <Header style={{ backgroundColor: this.props.color }}>
                         <Left>
                             <Button transparent>
                                 <TouchableHighlight
@@ -52,25 +48,40 @@ export default class ModalExample extends Component {
                         </Right>
                     </Header>
                     <Content>
-                        {/* <Item disabled style={colorMargin}>
-                            <Input onChangeText={(description) => this.setState({ description })} style={{ height: 35, backgroundColor: 'black' }} ></Input>
-                        </Item> */}
                         <Content>
-                            <Button block style={{lineHeight:30, width:300, margin:5, backgroundColor:'red', justifyContent:'flex-end', paddingRight:15}} onPress={(e)=>this.setState({red:!this.state.red})}>{this.state.red ? <IconF name='check' size={25} style={{color:'#fff'}}/>: null }</Button>
-                            <Button block style={{lineHeight:30, width:300, margin:5, backgroundColor:'orange', justifyContent:'flex-end', paddingRight:15}} onPress={(e)=>this.setState({orange:!this.state.orange})}>{this.state.orange ? <IconF name='check' size={25} style={{color:'#fff'}}/>: null }</Button>
-                            <Button block style={{lineHeight:30, width:300, margin:5, backgroundColor:'green', justifyContent:'flex-end', paddingRight:15}} onPress={(e)=>this.setState({green:!this.state.green})}>{this.state.green ? <IconF name='check' size={25} style={{color:'#fff'}}/>: null }</Button>
-                            <Button block style={{lineHeight:30, width:300, margin:5, backgroundColor:'yellow', justifyContent:'flex-end', paddingRight:15}} onPress={(e)=>this.setState({yellow:!this.state.yellow})}>{this.state.yellow ? <IconF name='check' size={25} style={{color:'#fff'}}/>: null }</Button>
-                            <Button block style={{lineHeight:30, width:300, margin:5, backgroundColor:'blue', justifyContent:'flex-end', paddingRight:15}} onPress={(e)=>this.setState({blue:!this.state.blue})}>{this.state.blue ? <IconF name='check' size={25} style={{color:'#fff'}}/>: null }</Button>
-                            <Button block style={{lineHeight:30, width:300, margin:5, backgroundColor:'pink', justifyContent:'flex-end', paddingRight:15}} onPress={(e)=>this.setState({pink:!this.state.pink})}>{this.state.pink ? <IconF name='check' size={25} style={{color:'#fff'}}/>: null }</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#EB5A46' }]} onPress={(e) => this.props.labelColor({ color: '#EB5A46', modalVisible:'false'})}>{this.props.color === '#EB5A46' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#FFAB4A' }]} onPress={(e) => this.props.labelColor({ color: '#FFAB4A', modalVisible:'false' })}>{this.props.color === '#FFAB4A' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#51E898' }]} onPress={(e) => this.props.labelColor({ color: '#51E898', modalVisible:'false' })}>{this.props.color === '#51E898' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#F5DD29' }]} onPress={(e) => this.props.labelColor({ color: '#F5DD29', modalVisible:'false' })}>{this.props.color === '#F5DD29' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#00C2E0' }]} onPress={(e) => this.props.labelColor({ color: '#00C2E0', modalVisible:'false' })}>{this.props.color === '#00C2E0' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#838C91' }]} onPress={(e) => this.props.labelColor({ color: '#838C91', modalVisible:'false' })}>{this.props.color === '#838C91' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
                         </Content>
                     </Content>
-
+                    {/* <Content style={{flexDirection:'row', height:35}}>
+                    <View>
+                    <TouchableHighlight
+                        onPress={() => {
+                            this.setModalVisible(!this.state.modalVisible);
+                        }}>
+                        <View style={{ height: 30, width: 50, backgroundColor: 'gray' }}><Text>Save</Text></View>
+                    </TouchableHighlight>
+                    </View>
+                    <View>
+                    <TouchableHighlight
+                        onPress={() => {
+                            this.props.labelColor({ color: '' })
+                            this.setModalVisible(!this.state.modalVisible);
+                        }}>
+                        <View style={{ height: 30, width: 50, backgroundColor: 'gray' }}><Text>Cancel</Text></View>
+                    </TouchableHighlight>
+                    </View>
+                    </Content> */}
                 </Modal>
-                <TouchableHighlight
+                <TouchableHighlight style={{alignItems:'center'}}
                     onPress={() => {
                         this.setModalVisible(true);
                     }}>
-                    <Text style={LabelPadding}>Label...</Text>
+                    <Text style={LabelPadding}>{this.props.color==='' ? 'Label...' : <View style={{backgroundColor:this.props.color, height:25, width: 225, borderRadius:3, marginLeft:10}}><Text style={{color:'#fff', paddingLeft:10, justifyContent:'center', alignItems:'center'}}>Tap to change task color</Text></View>}</Text>
                 </TouchableHighlight>
             </View>
         );
@@ -78,10 +89,12 @@ export default class ModalExample extends Component {
 }
 const styles = ({
     LabelPadding: {
-        paddingTop: 10,
-        height: 35,
-        marginLeft: 5,
-        color: '#C7C7CD'
+        height: 40,
+        marginLeft: 10,
+        color: '#C7C7CD',
+        alignItems: 'center',
+        justifyContent:'center',
+        alignContent:'center',
     },
     headerText: {
         color: '#fff',
@@ -90,9 +103,11 @@ const styles = ({
     colorMargin: {
         marginTop: 5
     },
-    buttonStyle:{
-        lineHeight:30,
-        width:300,
-        margin:5
+    buttonStyle: {
+        height: 50,
+        width: 300,
+        margin: 5,
+        justifyContent: 'flex-end',
+        paddingRight: 15
     }
 })
