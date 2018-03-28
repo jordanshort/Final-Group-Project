@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Alert, StatusBar, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, StatusBar, Image, AsyncStorage } from 'react-native';
 import { Container, Content } from 'native-base';
 import axios from 'axios';
 import FooterMenu from './components/Footer/FooterMenu';
@@ -11,19 +11,21 @@ import SplashScreen from 'react-native-splash-screen';
 import LoginScreen from './components/LoginScreen/LoginScreen'
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
 
-
+const PubIpAdress = '192.168.3.176'
 
 export default class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      user: {id: 1, name: "Jordan"},
+      user: null,
       showTasks: false,
       showCalendar: false,
       showTaskDetails: false,
       showOngoing: false,
       selectedDay: '',
-      selectedTask: {}
+      selectedTask: {},
+      isLoaded: false,
+      hasToken: false,
     }
     this.showMenuItem = this.showMenuItem.bind(this);
     this.onDayPress = this.onDayPress.bind(this);
@@ -31,77 +33,91 @@ export default class App extends React.Component {
     this.loginWindow = this.loginWindow.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     SplashScreen.hide();
+    AsyncStorage.getItem('token').then(token => {
+      this.setState({
+        hasToken: true !== null,
+        isLoaded: true
+      })
+    })
   }
 
-  showMenuItem(name){
-    this.setState({[name]: !this.state[name]});
+ 
+  showMenuItem(name) {
+    this.setState({ [name]: !this.state[name] });
   }
 
-  onDayPress(day) {    
+  onDayPress(day) {
     this.setState({
       selectedDay: day.dateString
     });
     this.showMenuItem('showCalendar');
   }
 
-  onTaskPress(task, listName){
-    this.setState({selectedTask: task});
+  onTaskPress(task, listName) {
+    this.setState({ selectedTask: task });
     this.showMenuItem('showTaskDetails');
     this.showMenuItem(listName);
   }
 
-  
+
 
   loginWindow() {
     auth0
       .webAuth
-      .authorize({scope: 'openid profile email', audience: `https://${AUTH0_DOMAIN}/userinfo`, useBrowser: true, responseType:'id_token'})
+      .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
-        // console.log(verifyToken)
-        // console.warn(credentials);
-        console.log(credentials);
-        
-        axios.post(`/api/index/${credentials}`).then(res=>{
-          console.log(res)
-          res.status(200).send(res)
-          this.setState({
-            user: res
+        // console.log('Credentials in APP.JS lin64: ', credentials.idToken);
+        axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
+
+          console.log('returned res after credentials sent: ', res)
+
+          AsyncStorage.setItem('token', JSON.stringify(res.data), () => {
+            AsyncStorage.getItem('token', (err, result) => {
+              console.log('result.data: ', result)
+              this.setState({
+                user: result
+              })
+              console.log('state.user after async: ', this.state.user);
+            })
           })
-        })
+        }).catch(err => console.log(err));
       })
-      // .catch(error => console.log(error));
+    // .catch(error => console.log(error));
   }
 
-  componentDidMount(){
-    SplashScreen.hide();
-  }
- 
-    
-  
   render() {
-    if (this.state.user){
-      return(
+    if (!this.state.isLoaded) {
+      return (
         <Container>
-          <Content>
-            <TaskDetails selectedTask={this.state.selectedTask}/>
-            <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem}/>
-            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress}/>
-            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress}/>
-          </Content>
-          <FooterMenu showMenuItem={this.showMenuItem} />         
+          <View>
+            <Text>Loading...</Text>
+          </View>
         </Container>
       )
     }
-     else {
-      return(
-        <View style={styles.container}>  
-        <StatusBar 
-        backgroundColor="#4f6d7a"
-        barStyle="light-content"
-        />
-        <LoginScreen login={this.loginWindow}/>
+    else if (this.state.user) {
+      return (
+        <Container>
+          <Content>
+            <TaskDetails selectedTask={this.state.selectedTask} />
+            <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem} />
+            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
+            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
+          </Content>
+          <FooterMenu showMenuItem={this.showMenuItem} />
+        </Container>
+      )
+    }
+    else {
+      return (
+        <View style={styles.container}>
+          <StatusBar
+            backgroundColor="#4f6d7a"
+            barStyle="light-content"
+          />
+          <LoginScreen login={this.loginWindow} />
         </View>
       )
     }
@@ -115,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text:{
+  text: {
     color: '#f5fcff',
     fontSize: 20
   }

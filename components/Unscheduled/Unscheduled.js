@@ -4,6 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
+const PubIpAdress = '216.21.163.235';
 
 const datas = [
     {name: 'Simon Mignolet', age: 31},
@@ -28,13 +29,13 @@ export default class Unscheduled extends Component{
       }
 
     componentDidMount(){
-        axios.get('http://192.168.3.149:4040/api/unscheduled').then(resp => {
+        axios.get(`http://${PubIpAdress}:4040/api/unscheduled`).then(resp => {
             this.setState({listViewData: resp.data});
         });
     }
 
     deleteTask(id){
-        axios.delete(`http://192.168.3.149:4040/api/unscheduled/${id}`).then(resp => {
+        axios.delete(`http://${PubIpAdress}:4040/api/unscheduled/${id}`).then(resp => {
             console.log(resp.data);
             this.setState({listViewData: resp.data});
         });
