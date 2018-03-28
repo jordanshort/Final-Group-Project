@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 require('dotenv').config();
 const { CONNECTION_STRING, AUTH0_CLIENT_SECRET, JWT_SECRET, SERVER_PORT } = process.env;
 
-massive(CONNECTION_STRING).then( db => {
+massive(CONNECTION_STRING).then(db => {
     console.log('DB connected')
     
     app.set('db', db);
@@ -18,10 +18,10 @@ massive(CONNECTION_STRING).then( db => {
 
 //Auth login endpoints
 app.post('/api/auth', (req, res, next) => {
-    console.log('Auth endpoint hit');
+    // console.log('req.token index.js: ', req.body)
     jwt.verify(req.body.token, AUTH0_CLIENT_SECRET, (err, decoded) => {
         let db = app.get('db');
-        if (err){
+        if (err) {
             console.log('Authorization failed', err);
             next(err);
         }
@@ -29,15 +29,18 @@ app.post('/api/auth', (req, res, next) => {
         db.checkForUser([sub]).then((resp) => {
             let user = resp[0];
             let id = '';
-            if (!user){
+            if (!user) {
                 db.createUser([given_name, family_name, email, sub]).then(resp => {
                     id = resp[0].userid;
-                    let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d'})
-                    res.status(200).send(token);                    
+                    let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' })
+                    console.log('token after create user: ', token)
+                    res.status(200).send(token);
                 });
-            } else {
+            }
+            else {
                 id = user.id;
-                let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d'})
+                let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' })
+                console.log('token if user exists: ', token)
                 res.status(200).send(token);
             }
         })
@@ -61,7 +64,7 @@ app.get('/api/user', userCtrl.getUser);
 
 
 app.listen(SERVER_PORT, () => {
-    console.log('Server is listening on port ' +SERVER_PORT);
+    console.log('Server is listening on port ' + SERVER_PORT);
 });
 
 
