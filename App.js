@@ -9,7 +9,9 @@ import CalendarScreen from './components/CalendarScreen/CalendarScreen';
 import Ongoing from './components/Ongoing/Ongoing';
 import SplashScreen from 'react-native-splash-screen';
 import LoginScreen from './components/LoginScreen/LoginScreen'
+import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator'
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
+
 
 const PubIpAdress = '192.168.3.176'
 
@@ -18,6 +20,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       user: null,
+      userToken: null,
       showTasks: false,
       showCalendar: false,
       showTaskDetails: false,
@@ -33,17 +36,23 @@ export default class App extends React.Component {
     this.loginWindow = this.loginWindow.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     SplashScreen.hide();
-    AsyncStorage.getItem('token').then(token => {
+    
+    let checkToken = await AsyncStorage.getItem('token').then(res =>{
+      return res;
+    }).catch(err => console.log(err));
+
+    if (checkToken !== null) {
+      console.log('CheckToken data: ', checkToken)
       this.setState({
-        hasToken: true !== null,
-        isLoaded: true
+        hasToken: true,
+        userToken: checkToken
       })
-    })
+    }
   }
 
- 
+
   showMenuItem(name) {
     this.setState({ [name]: !this.state[name] });
   }
@@ -68,36 +77,31 @@ export default class App extends React.Component {
       .webAuth
       .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
-        // console.log('Credentials in APP.JS lin64: ', credentials.idToken);
         axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
-
-          console.log('returned res after credentials sent: ', res)
-
           AsyncStorage.setItem('token', JSON.stringify(res.data), () => {
             AsyncStorage.getItem('token', (err, result) => {
-              console.log('result.data: ', result)
               this.setState({
-                user: result
+                userToken: result,
+                hasToken: true
               })
-              console.log('state.user after async: ', this.state.user);
             })
           })
         }).catch(err => console.log(err));
-      })
-    // .catch(error => console.log(error));
+      }).catch(err => console.log(err));
   }
 
+
   render() {
-    if (!this.state.isLoaded) {
-      return (
-        <Container>
-          <View>
-            <Text>Loading...</Text>
-          </View>
-        </Container>
-      )
-    }
-    else if (this.state.user) {
+    // if (!this.state.isLoaded && !this.state.user) {
+    //   return (
+    //     <LoadingIndicator />
+    //   )
+    // }
+    console.log('state.user: ', this.state.user)
+    console.log('state.hasToken: ', this.state.hasToken)
+    console.log('state.userToken: ', this.state.userToken)
+
+    if (this.state.userToken && this.state.hasToken) {
       return (
         <Container>
           <Content>
