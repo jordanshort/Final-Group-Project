@@ -22,7 +22,7 @@ const styles= StyleSheet.create({
         height: '100%',
         width: '100%',
         justifyContent: 'center',
-        backgroundColor: '#404e5c'
+        backgroundColor: '#4f6d7a'
     },
     horizontal:{
         flexDirection: 'row',
