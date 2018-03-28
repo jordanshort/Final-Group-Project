@@ -22,7 +22,7 @@ export default class FooterMenu extends Component{
                             <Icon name="paper" />
                             <Text>WIP</Text>
                         </Button>
-                        <Button vertical>
+                        <Button vertical onPress={() => this.props.showMenuItem('showMenu')}>
                             <Icon name="navigate" />
                             <Text>Menu</Text>
                         </Button>

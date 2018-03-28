@@ -78,7 +78,7 @@ export default class LoginScreen extends Component {
 
                     <Button transparent
                         title="Sign Up"
-                        onPress={() => console.warn('You\'ve signed up!')}
+                        onPress={() => this.props.login()}
                     >
                         <Text style={{
                             fontSize: 15,
