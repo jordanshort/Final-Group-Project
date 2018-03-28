@@ -11,11 +11,13 @@ const { CONNECTION_STRING, AUTH0_CLIENT_SECRET, JWT_SECRET, SERVER_PORT } = proc
 
 massive(CONNECTION_STRING).then( db => {
     console.log('DB connected')
+    
     app.set('db', db);
 });
 
 //Auth login endpoints
 app.post('/api/auth', (req, res) => {
+    console.log('Auth endpoint hit');
     jwt.verify(req.body.token, AUTH0_CLIENT_SECRET, (err, decoded) => {
         let db = app.get('db');
         if (err){
@@ -43,9 +45,9 @@ app.post('/api/auth', (req, res) => {
 
 //task endpoints
 app.get('/api/unscheduled', taskCtrl.getUnscheduled);
-app.delete('/api/unscheduled/:id', taskCtrl.deleteUnscheduled)
+app.delete('/api/unscheduled/:taskid', taskCtrl.deleteUnscheduled)
 app.get('/api/inprogress', taskCtrl.getInProgress);
-app.delete('/api/inprogress/:id', taskCtrl.deleteOngoing);
+app.delete('/api/inprogress/:taskid', taskCtrl.deleteOngoing);
 
 //task details endpoints
 app.post('/api/checklist/:taskid', tdCtrl.addCheckItem);
